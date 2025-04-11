@@ -1,0 +1,95 @@
+/* Base Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f0f2f5;
+}
+
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+/* Chat Container */
+.chat-container {
+    max-width: 800px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+
+/* Chat Header */
+header {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+/* Chat Area */
+.chat-area {
+    height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #f9f9f9;
+}
+
+/* Message Input Form */
+form {
+    display: flex;
+    gap: 10px;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+/* Message Styling */
+.chat-area p {
+    margin: 8px 0;
+    padding: 8px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Add to styles.css */
+/* Differentiate sent/received messages */
+.message-outgoing {
+    background: #d1ecf1;
+    margin-left: 20%;
+}
+
+.message-incoming {
+    background: #fff3cd;
+    margin-right: 20%;
+}
+
+/* Online Users List (if implemented later) */
+.online-users {
+    border-left: 1px solid #eee;
+    padding-left: 15px;
+    min-width: 200px;
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>QuickChat - Home</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to QuickChat</h1>
+        <form id="username-form">
+            <input type="text" id="username" placeholder="Choose a username" required>
+            <div class="chat-type">
+                <button type="button" onclick="location.href='/chat'">Private Chat</button>
+                <button type="button" onclick="location.href='/group-chat'">Group Chat</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/client.js"></script>
+</body>
+</html>

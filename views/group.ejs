@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Chat</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="chat-container">
+        <header>
+            <h2>Group Chat</h2>
+            <p>Logged in as: <span id="current-user"><%= username %></span></p>
+        </header>
+
+        <div class="chat-area" id="chat-area">
+            <!-- Group messages will appear here -->
+        </div>
+
+        <form id="group-form">
+            <input type="text" id="group-name" placeholder="Group name">
+            <input type="text" id="message" placeholder="Type your message">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/client.js"></script>
+</body>
+</html>

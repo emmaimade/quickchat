@@ -3,27 +3,38 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import moment from 'moment';
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3500;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.get("/", (req, res) => {
-    res.render("home.ejs");
-})
+let users = []
 
-app.get("/chat", (req, res) => {
-    res.render("chat.ejs");
-})
+io.on('connection', (socket) => {
+    socket.on('new-user', (username) => {
+        console.log(username);
+        const user = {
+            id: socket.id,
+            username,
+            timestamp: moment().format('h:mm a')
+        }
 
-app.get("/group", (req, res) => {
-    res.render("group.ejs");
+        users.push(user);
+        console.log(user)
+        socket.username = username;
+        io.emit('user-connected', user);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected')
+    })
 })
 
 server.listen(PORT, () => {

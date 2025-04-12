@@ -66,34 +66,7 @@ button:hover {
     background: #0056b3;
 }
 
-/* Message Styling */
-.chat-area p {
-    margin: 8px 0;
-    padding: 8px;
-    background: white;
-    border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-/* Add to styles.css */
-/* Differentiate sent/received messages */
-.message-outgoing {
-    background: #d1ecf1;
-    margin-left: 20%;
-}
-
-.message-incoming {
-    background: #fff3cd;
-    margin-right: 20%;
-}
-
-/* Online Users List (if implemented later) */
-.online-users {
-    border-left: 1px solid #eee;
-    padding-left: 15px;
-    min-width: 200px;
-}
-
+/* Message Styles */
 .notification {
     padding: 6px 10px;
     margin: 8px 0;
@@ -113,16 +86,18 @@ button:hover {
     border-radius: 5px;
   }
   
-  .timestamp {
+.timestamp {
     color: #666;
     font-size: 0.8em;
     margin-right: 5px;
-  }
+}
 
-  .message {
+.message {
     margin: 10px 0;
     padding: 8px 12px;
-    border-radius: 4px;
+    padding: 12px;
+    border-radius: 8px;
+    max-width: 70%;
 }
 
 .system-message {
@@ -150,5 +125,19 @@ button:hover {
     margin-right: 8px;
     color: #999;
 }
-  
+
+.sent-message {
+    background-color: #dcf8c6;
+    margin-left: auto;
+    border-bottom-right-radius: 0;
+}
+
+.received-message {
+    background-color: #ffffff;
+    margin-right: auto;
+    border-bottom-left-radius: 0;
+}
+
+
+
  

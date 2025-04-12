@@ -39,6 +39,15 @@ io.on('connection', (socket) => {
         socket.broadcast.emit('user-join', user);
     });
 
+    socket.on('send-message', (data) => {
+        // broadcast message to all users
+        io.emit('receive-message', {
+            username: data.username,
+            message: data.message,
+            timestamp: moment().format('h:mm a')
+        })
+    });
+
     socket.on('disconnect', () => {
         console.log('user disconnected')
     })

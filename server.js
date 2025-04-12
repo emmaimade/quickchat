@@ -19,7 +19,6 @@ let users = []
 
 io.on('connection', (socket) => {
     socket.on('new-user', (username) => {
-        console.log(username);
         const user = {
             id: socket.id,
             username,
@@ -27,9 +26,17 @@ io.on('connection', (socket) => {
         }
 
         users.push(user);
-        console.log(user)
         socket.username = username;
-        io.emit('user-connected', user);
+
+        // send welcome message to user
+        socket.emit('welcome-message', {
+            message: `Welcome to QuickChat, ${username}!`,
+            timestamp: moment().format('h:mm a'),
+            sender: 'QuickChat Bot'
+        })
+
+        // broadcast join to all users
+        socket.broadcast.emit('user-join', user);
     });
 
     socket.on('disconnect', () => {

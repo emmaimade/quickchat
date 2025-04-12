@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>QuickChat</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
     <div class="chat-container">
         <header>
-            <h2>Chat</h2>
+            <h2>QuickChat</h2>
             <p>Logged in as: <span id="current-user"></span></p>
         </header>
 
@@ -16,14 +16,14 @@
             <!-- Messages will appear here -->
         </div>
 
-        <form id="private-form">
-            <input type="text" id="recipient" placeholder="Recipient username">
+        <form id="message-form">
             <input type="text" id="message" placeholder="Type your message">
             <button type="submit">Send</button>
         </form>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="./client.js"></script>
+    <script src="./js/client.js"></script>
+    <script src="./js/chat.js"></script>
 </body>
 </html>

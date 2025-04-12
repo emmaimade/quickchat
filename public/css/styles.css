@@ -95,18 +95,18 @@ button:hover {
 }
 
 .notification {
-    color: #666;
+    padding: 6px 10px;
+    margin: 8px 0;
     font-size: 0.9em;
-    padding: 8px;
-    background: #f3f3f3;
+    text-align: center;
+    color: #666;
+    background-color: #f8f8f8;
     border-radius: 4px;
-    margin: 5px 0;
-  }
+}
 
 .notification-message {
     color: #666;
     font-style: italic;
-    text-align: center;
     margin: 10px 0;
     padding: 5px;
     background-color: #f0f0f0;
@@ -114,9 +114,41 @@ button:hover {
   }
   
   .timestamp {
-    color: #999;
+    color: #666;
     font-size: 0.8em;
     margin-right: 5px;
   }
+
+  .message {
+    margin: 10px 0;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+.system-message {
+    background-color: #f0f0f0;
+    border-left: 3px solid #666;
+}
+
+.message-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    font-size: 0.9em;
+}
+
+.sender {
+    font-weight: bold;
+    color: #333;
+}
+
+.message-content {
+    color: #444;
+}
+
+.notification-timestamp {
+    margin-right: 8px;
+    color: #999;
+}
   
  

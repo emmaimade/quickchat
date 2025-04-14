@@ -10,9 +10,8 @@ form.addEventListener('submit', (e) => {
         // send username to server
         socket.emit('new-user', usernameInput.value);
         window.location.href = `/chat.html?username=${encodeURIComponent(usernameInput.value)}`;
+    } else {
+        alert('Please enter a username');
     }
 });
 
-socket.on('user-connected', (data) => {
-    console.log(data);
-})

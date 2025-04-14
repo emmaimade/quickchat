@@ -18,6 +18,8 @@ app.use(express.static(path.join(__dirname, "public")));
 let users = []
 
 io.on('connection', (socket) => {
+    let registered = false;
+
     socket.on('new-user', (username) => {
         const user = {
             id: socket.id,
@@ -26,6 +28,7 @@ io.on('connection', (socket) => {
         }
 
         users.push(user);
+        registered = true;
         socket.username = username;
 
         // send welcome message to user
@@ -49,7 +52,19 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        console.log('user disconnected')
+        if (!registered) return;
+
+        const disconnectedUser = users.find(user => user.id === socket.id);
+
+        if (disconnectedUser) {
+            // broadcast leave message to all users
+            socket.broadcast.emit('user-leave', {
+                username: socket.username,
+                timestamp: moment().format('h:mm a')
+            });
+        }
+
+        users = users.filter(user => user.id !== socket.id);
     })
 })
 

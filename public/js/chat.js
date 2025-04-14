@@ -6,8 +6,11 @@ const messageInput = document.getElementById('message');
 const urlParams = new URLSearchParams(window.location.search);
 const username = urlParams.get('username');
 
+let isConnected = false;
+
 if (username) {
     console.log(username);
+    isConnected = true;
     currentUser.textContent = decodeURIComponent(username);
 
     socket.emit('new-user', decodeURIComponent(username));
@@ -20,7 +23,7 @@ socket.on('welcome-message', (data) => {
     const welcomeMessage = document.createElement('div');
     welcomeMessage.className = 'message system-message';
     welcomeMessage.innerHTML = `
-    <span class="messager-header">
+    <span class="message-header">
         <span class="sender">${data.sender}</span>
         <span class="timestamp">${data.timestamp}</span> 
     </span>
@@ -33,7 +36,7 @@ socket.on('welcome-message', (data) => {
 // user join message
 socket.on('user-join', (data) => {
     const notification = document.createElement('div');
-    notification.className = 'notification';
+    notification.className = 'notification user-join';
     notification.innerHTML = `
         <span class="notification-timestamp">${data.timestamp}</span>
         <span class="notification-text">${data.username} has joined the chat</span>
@@ -62,10 +65,34 @@ socket.on('receive-message', (data) => {
     addMessage(data);
 })
 
+// user leave message
+socket.on('user-leave', (data) => {
+    if(!data.username) return;
+    
+    if (isConnected) {
+        const notification = document.createElement('div');
+        notification.className = 'notification user-left';
+        notification.innerHTML = `
+        <span class="notification-timestamp">${data.timestamp}</span>
+        <span class="notification-text">${data.username} has left the chat</span>
+    `;
+        chatArea.appendChild(notification);
+        scrollToBottom();
+    }
+    
+})
+
+socket.on('disconnect', () => {
+    if (isConnected) {
+        isConnected = false;
+        window.location.href = '/';
+    }
+})
+
 // message helper function
 function addMessage(data) {
     const message = document.createElement('div');
-    message.className = 'message';
+    message.className = 'message user-message';
     message.innerHTML = `
         <div class="message-header">
             <span class="sender">${data.username}</span>

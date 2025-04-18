@@ -16,30 +16,44 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "public")));
 
 let users = []
+const pendingDisconnects = new Map();
 
 io.on('connection', (socket) => {
-    let registered = false;
+    let username = null;
 
-    socket.on('new-user', (username) => {
-        const user = {
-            id: socket.id,
-            username,
-            timestamp: moment().format('h:mm a')
+    socket.on('new-user', (name) => {
+        username = name;
+
+        // clear pending disconnect
+        if (pendingDisconnects.has(username)) {
+            clearTimeout(pendingDisconnects.get(username));
+            pendingDisconnects.delete(username);
         }
 
-        users.push(user);
-        registered = true;
-        socket.username = username;
-
-        // send welcome message to user
-        socket.emit('welcome-message', {
-            message: `Welcome to QuickChat, ${username}!`,
-            timestamp: moment().format('h:mm a'),
-            sender: 'QuickChat Bot'
-        })
-
-        // broadcast join to all users
-        socket.broadcast.emit('user-join', user);
+        // check if user already exists
+        if (users.some(user => user.username === username)) {
+            const existingUser = users.find(user => user.username === username);
+            existingUser.id = socket.id;
+        } else {
+            const user = {
+                id: socket.id,
+                username,
+                timestamp: moment().format('h:mm a')
+            }
+    
+            users.push(user);
+            socket.username = username;
+    
+            // send welcome message to user
+            socket.emit('welcome-message', {
+                message: `Welcome to QuickChat, ${username}!`,
+                timestamp: user.timestamp,
+                sender: 'QuickChat Bot'
+            })
+    
+            // broadcast join to all users
+            socket.broadcast.emit('user-join', user);
+        }
     });
 
     socket.on('send-message', (data) => {
@@ -52,19 +66,19 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        if (!registered) return;
-
-        const disconnectedUser = users.find(user => user.id === socket.id);
-
-        if (disconnectedUser) {
-            // broadcast leave message to all users
-            socket.broadcast.emit('user-leave', {
-                username: socket.username,
+        if (username) {
+            const timeout = setTimeout(() => {
+                users = users.filter(user => user.username !== username);
+                // broadcast leave message to all users
+                socket.broadcast.emit('user-leave', {
+                username,
                 timestamp: moment().format('h:mm a')
-            });
+                });
+                pendingDisconnects.delete(username);
+            }, 5000); // 5 seconds grace period
+            
+            pendingDisconnects.set(username, timeout);
         }
-
-        users = users.filter(user => user.id !== socket.id);
     })
 })
 

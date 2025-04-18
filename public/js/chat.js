@@ -6,17 +6,41 @@ const messageInput = document.getElementById('message');
 const urlParams = new URLSearchParams(window.location.search);
 const username = urlParams.get('username');
 
-let isConnected = false;
+// Simple state management
+const appState = {
+    currentUser: null,
+    isConnected: false,
+    
+    // Similar to React's useState
+    setUser(username) {
+      this.currentUser = username;
+      this.updateUI();
+    },
+    
+    setConnected(status) {
+      this.isConnected = status;
+      this.updateUI();
+    },
+    
+    updateUI() {
+      // Update any UI elements that depend on state
+      if (this.currentUser) {
+        document.getElementById('current-user').textContent = this.currentUser;
+      }
+    }
+};
 
-if (username) {
-    console.log(username);
-    isConnected = true;
-    currentUser.textContent = decodeURIComponent(username);
-
-    socket.emit('new-user', decodeURIComponent(username));
-} else {
-    window.location.href = '/';
-}
+socket.on('connect', () => {
+    appState.setConnected(true);
+    if (username) {
+        console.log(username);
+        const user = decodeURIComponent(username);
+        appState.setUser(user)
+        socket.emit('new-user', user);
+    } else {
+        window.location.href = '/';
+    }
+})
 
 // user welcome message
 socket.on('welcome-message', (data) => {
@@ -65,28 +89,38 @@ socket.on('receive-message', (data) => {
     addMessage(data);
 })
 
-// user leave message
-socket.on('user-leave', (data) => {
-    if(!data.username) return;
-    
-    if (isConnected) {
-        const notification = document.createElement('div');
-        notification.className = 'notification user-left';
-        notification.innerHTML = `
-        <span class="notification-timestamp">${data.timestamp}</span>
-        <span class="notification-text">${data.username} has left the chat</span>
-    `;
-        chatArea.appendChild(notification);
-        scrollToBottom();
+// reconnect handler
+socket.on('reconnect', () => {
+    if (appState.currentUser) {
+      // Re-register user without page reload
+      socket.emit('new-user', appState.currentUser);
     }
-    
+});
+
+// disconnect handler
+socket.on('disconnect', () => {
+    appState.setConnected(false);
+
+    // Show temporary disconnect message
+    const notification = document.createElement('div');
+    notification.className = 'notification connection';
+    notification.textContent = 'Connection lost - attempting to reconnect...';
+    chatArea.appendChild(notification);
+    scrollToBottom();
 })
 
-socket.on('disconnect', () => {
-    if (isConnected) {
-        isConnected = false;
-        window.location.href = '/';
-    }
+// user leave message
+socket.on('user-leave', (data) => {
+    if(!data.username || !appState.currentUser) return;
+    
+    const notification = document.createElement('div');
+    notification.className = 'notification user-left';
+    notification.innerHTML = `
+        <span class="notification-timestamp">${data.timestamp}<span>
+        <span class="notification-text">${data.username} has left the chat</span>
+    `;
+    chatArea.appendChild(notification);
+    scrollToBottom();
 })
 
 // message helper function

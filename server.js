@@ -20,6 +20,7 @@ const pendingDisconnects = new Map();
 
 io.on('connection', (socket) => {
     let username = null;
+    broadcastUserList()
 
     socket.on('new-user', (name) => {
         username = name;
@@ -43,7 +44,10 @@ io.on('connection', (socket) => {
     
             users.push(user);
             socket.username = username;
-    
+            
+            // broadcast user list
+            broadcastUserList()
+
             // send welcome message to user
             socket.emit('welcome-message', {
                 message: `Welcome to QuickChat, ${username}!`,
@@ -69,17 +73,30 @@ io.on('connection', (socket) => {
         if (username) {
             const timeout = setTimeout(() => {
                 users = users.filter(user => user.username !== username);
+
+                // broadcast user list
+                broadcastUserList();
+
                 // broadcast leave message to all users
                 socket.broadcast.emit('user-leave', {
-                username,
-                timestamp: moment().format('h:mm a')
+                    username,
+                    timestamp: moment().format('h:mm a')
                 });
                 pendingDisconnects.delete(username);
-            }, 5000); // 5 seconds grace period
+            }, 10000); // 10 seconds grace period
             
             pendingDisconnects.set(username, timeout);
         }
-    })
+    });
+
+    function broadcastUserList() {
+        io.emit('user-list', 
+            users.map(user => ({
+                username: user.username,
+                joinTime: user.timestamp
+            }))
+        );
+    }
 })
 
 server.listen(PORT, () => {

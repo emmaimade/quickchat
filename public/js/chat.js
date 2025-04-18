@@ -2,6 +2,7 @@ const currentUser = document.getElementById('current-user');
 const chatArea = document.getElementById('chat-area');
 const messageForm = document.getElementById('message-form');
 const messageInput = document.getElementById('message');
+const onlineUsers = document.getElementById('users');
 
 const urlParams = new URLSearchParams(window.location.search);
 const username = urlParams.get('username');
@@ -33,13 +34,25 @@ const appState = {
 socket.on('connect', () => {
     appState.setConnected(true);
     if (username) {
-        console.log(username);
         const user = decodeURIComponent(username);
         appState.setUser(user)
         socket.emit('new-user', user);
     } else {
         window.location.href = '/';
     }
+});
+
+// user list
+socket.on('user-list', (users) => {
+    console.log(users)
+    onlineUsers.innerHTML = users
+        .map(user => `
+            <li class="user-item>
+                <span class="username">${user.username}</span>
+                <small>${user.joinTime}</small>
+            </li>
+        `)
+        .join('');
 })
 
 // user welcome message

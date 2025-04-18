@@ -33,13 +33,13 @@ input[type="text"] {
 
 .chat-sidebar h3 {
     font-size: 16px;
-    color: #ecf0f1;
+    color: #1abc9c;
     margin-top: 0;
 }
 
 .chat-sidebar h2 {
     font-size: 20px;
-    color: #1abc9c;
+    color: #ecf0f1;
     margin-bottom: 10px;
 }
 

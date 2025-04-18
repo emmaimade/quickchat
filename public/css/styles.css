@@ -8,6 +8,19 @@ body {
     overflow: hidden;
 }
 
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
 /* Sidebar */
 .chat-sidebar {
     width: 250px;
